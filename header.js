@@ -71,25 +71,12 @@ function loadGlobalHeader() {
     
     headerContainer.innerHTML = headerHTML;
     
-    // Re-initialize mobile menu functionality after header is loaded
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const navLinks = document.getElementById('navLinks');
-    
-    if (mobileMenuBtn && navLinks) {
-        mobileMenuBtn.addEventListener('click', function() {
-            navLinks.classList.toggle('active');
-            const icon = mobileMenuBtn.querySelector('i');
-            if (icon) {
-                if (navLinks.classList.contains('active')) {
-                    icon.classList.remove('fa-bars');
-                    icon.classList.add('fa-times');
-                } else {
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                }
-            }
-        });
-    }
+    // Mobile menu will be initialized by script.js
+    // Trigger a custom event to notify script.js that header is loaded
+    setTimeout(() => {
+        const event = new CustomEvent('headerLoaded');
+        window.dispatchEvent(event);
+    }, 100);
 }
 
 // Auto-load header when DOM is ready

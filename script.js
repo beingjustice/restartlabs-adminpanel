@@ -2,20 +2,67 @@
 // RestartLab - JavaScript Functionality
 // ============================================
 
-// Mobile Menu Toggle
-const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-const navLinks = document.getElementById('navLinks');
+// Mobile Menu Toggle - Re-initialize after header loads
+function initMobileMenu() {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
 
-if (mobileMenuBtn && navLinks) {
-    mobileMenuBtn.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        const icon = mobileMenuBtn.querySelector('i');
-        if (icon) {
-            icon.classList.toggle('fa-bars');
-            icon.classList.toggle('fa-times');
+    if (mobileMenuBtn && navLinks) {
+        // Check if already initialized
+        if (mobileMenuBtn.dataset.initialized === 'true') {
+            return;
         }
-    });
+        
+        mobileMenuBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            navLinks.classList.toggle('active');
+            const icon = mobileMenuBtn.querySelector('i');
+            if (icon) {
+                if (navLinks.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            }
+        });
+        
+        // Mark as initialized
+        mobileMenuBtn.dataset.initialized = 'true';
+    }
 }
+
+// Initialize multiple times to catch header loading
+function setupMobileMenu() {
+    initMobileMenu();
+    // Try again after a delay
+    setTimeout(initMobileMenu, 100);
+    setTimeout(initMobileMenu, 500);
+    setTimeout(initMobileMenu, 1000);
+}
+
+// Initialize after DOM and header are loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupMobileMenu);
+} else {
+    setupMobileMenu();
+}
+
+// Also watch for header container changes
+const headerContainer = document.getElementById('global-header');
+if (headerContainer) {
+    const observer = new MutationObserver(() => {
+        setTimeout(initMobileMenu, 100);
+    });
+    observer.observe(headerContainer, { childList: true, subtree: true });
+}
+
+// Listen for header loaded event
+window.addEventListener('headerLoaded', () => {
+    setTimeout(initMobileMenu, 100);
+});
 
 // Mega Menu for Mobile and Desktop
 const megaMenuParents = document.querySelectorAll('.mega-menu-parent');
@@ -321,43 +368,4 @@ window.addEventListener('load', () => {
 //     });
 // }
 
-// Responsive mobile menu styles
-const style = document.createElement('style');
-style.textContent = `
-    @media (max-width: 768px) {
-        .nav-links {
-            position: fixed;
-            top: 70px;
-            left: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.98);
-            backdrop-filter: blur(10px);
-            flex-direction: column;
-            padding: 2rem;
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-            border-top: 1px solid var(--border-color);
-        }
-        
-        .nav-links.active {
-            transform: translateX(0);
-        }
-        
-        .nav-links li {
-            width: 100%;
-        }
-        
-        .nav-links a {
-            display: block;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .nav-links a.btn-primary {
-            margin-top: 1rem;
-            text-align: center;
-            border: none;
-        }
-    }
-`;
-document.head.appendChild(style);
+// Mobile menu styles are now in styles.css

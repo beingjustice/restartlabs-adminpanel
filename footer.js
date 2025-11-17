@@ -53,11 +53,11 @@ const footerHTML = `
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; 2025 RestartLab. All rights reserved.</p>
             <div class="footer-links">
                 <a href="privacy-policy">Privacy Policy</a>
                 <a href="terms-conditions">Terms & Conditions</a>
             </div>
+            <p>&copy; 2025 RestartLab. All rights reserved.</p>
         </div>
     </footer>
 `;
