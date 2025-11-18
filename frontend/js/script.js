@@ -172,8 +172,7 @@ if (contactForm) {
     contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Get form data
-        const formData = new FormData(this);
+        // Get form values for validation
         const name = this.querySelector('#name').value;
         const email = this.querySelector('#email').value;
         const phone = this.querySelector('#phone').value;
@@ -193,19 +192,86 @@ if (contactForm) {
             return;
         }
         
-        // Simulate form submission
+        // Submit form to API
         const submitButton = this.querySelector('button[type="submit"]');
         const originalText = submitButton.innerHTML;
         submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
         submitButton.disabled = true;
         
-        // Simulate API call (replace with actual API endpoint)
-        setTimeout(() => {
-            showNotification('Thank you! Your message has been sent successfully. We will contact you soon.', 'success');
-            this.reset();
+        // Submit to API - create FormData here
+        const formData = new FormData(this);
+        
+        fetch('../api/submit-contact.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            // Check if response is ok
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.message || 'Server error occurred');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            const formMessage = document.getElementById('formMessage');
+            const formMessageText = document.getElementById('formMessageText');
+            
+            if (data.success) {
+                // Show success notification
+                showNotification(data.message || 'Thank you! Your message has been sent successfully. We will contact you soon.', 'success');
+                
+                // Show inline success message
+                if (formMessage && formMessageText) {
+                    formMessage.style.display = 'block';
+                    formMessage.style.background = 'rgba(28, 212, 194, 0.2)';
+                    formMessage.style.border = '1px solid #1cd4c2';
+                    formMessage.style.color = '#1cd4c2';
+                    formMessageText.innerHTML = '<i class="fas fa-check-circle"></i> ' + (data.message || 'Message sent successfully! We will contact you soon.');
+                }
+                
+                this.reset();
+                
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    if (formMessage) formMessage.style.display = 'none';
+                }, 5000);
+            } else {
+                // Show error notification
+                showNotification(data.message || 'An error occurred. Please try again.', 'error');
+                
+                // Show inline error message
+                if (formMessage && formMessageText) {
+                    formMessage.style.display = 'block';
+                    formMessage.style.background = 'rgba(255, 68, 68, 0.2)';
+                    formMessage.style.border = '1px solid #ff4444';
+                    formMessage.style.color = '#ff4444';
+                    formMessageText.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + (data.message || 'Failed to send message. Please try again.');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            const formMessage = document.getElementById('formMessage');
+            const formMessageText = document.getElementById('formMessageText');
+            
+            // Show error notification
+            showNotification(error.message || 'An error occurred. Please try again later.', 'error');
+            
+            // Show inline error message
+            if (formMessage && formMessageText) {
+                formMessage.style.display = 'block';
+                formMessage.style.background = 'rgba(255, 68, 68, 0.2)';
+                formMessage.style.border = '1px solid #ff4444';
+                formMessage.style.color = '#ff4444';
+                formMessageText.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + (error.message || 'Network error. Please check your connection and try again.');
+            }
+        })
+        .finally(() => {
             submitButton.innerHTML = originalText;
             submitButton.disabled = false;
-        }, 2000);
+        });
     });
 }
 
@@ -269,20 +335,42 @@ function showNotification(message, type = 'success') {
     // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
+    // Determine colors based on type
+    let bgColor, textColor, icon;
+    if (type === 'success') {
+        bgColor = '#1cd4c2'; // teal
+        textColor = '#000000';
+        icon = '<i class="fas fa-check-circle"></i> ';
+    } else if (type === 'error') {
+        bgColor = '#ff4444'; // red
+        textColor = '#ffffff';
+        icon = '<i class="fas fa-exclamation-circle"></i> ';
+    } else {
+        bgColor = '#ffaa00'; // orange
+        textColor = '#000000';
+        icon = '<i class="fas fa-info-circle"></i> ';
+    }
+    
     notification.style.cssText = `
         position: fixed;
         top: 100px;
         right: 20px;
-        background: ${type === 'success' ? 'var(--accent-teal)' : '#ffffff'};
-        color: white;
+        background: ${bgColor};
+        color: ${textColor};
         padding: 1rem 1.5rem;
         border-radius: 0.5rem;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        z-index: 10000;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        z-index: 99999;
         animation: slideInRight 0.3s ease;
         max-width: 400px;
+        min-width: 300px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.95rem;
     `;
-    notification.textContent = message;
+    notification.innerHTML = icon + message;
     
     // Add animation styles if not already added
     if (!document.querySelector('#notification-styles')) {
