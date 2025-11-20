@@ -1,28 +1,37 @@
 # Enable URL Rewriting
 RewriteEngine On
 
-# Set base directory (adjust if your site is in a subdirectory)
-RewriteBase /restartlabs/
+# Set base directory
+RewriteBase /
 
-# Redirect index.html or index to root
-RewriteCond %{THE_REQUEST} /restartlabs/index\.(html|php)?[\s?] [NC]
-RewriteRule ^index\.(html|php)?$ /restartlabs/ [NC,R=301,L]
+# Skip rewrite for existing files and directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
 
-# Redirect /index to root (for subdirectory)
-RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/restartlabs/index[\s?] [NC]
-RewriteRule ^index/?$ /restartlabs/ [NC,R=301,L]
+# Skip rewrite for frontend directory direct access
+RewriteCond %{REQUEST_URI} ^/frontend/ [NC]
+RewriteRule ^ - [L]
 
-# Remove .html extension from URLs
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^([^\.]+)$ $1.html [NC,L]
+# Skip rewrite for api directory
+RewriteCond %{REQUEST_URI} ^/api/ [NC]
+RewriteRule ^ - [L]
+
+# If accessing root, serve frontend/index.html
+RewriteCond %{REQUEST_URI} ^/?$ [NC]
+RewriteRule ^$ frontend/index.html [L]
+
+# Remove .html extension from URLs and serve from frontend
+RewriteCond %{REQUEST_URI} ^/([^/]+)/?$ [NC]
+RewriteCond %{DOCUMENT_ROOT}/frontend/%1.html -f
+RewriteRule ^([^/]+)/?$ frontend/$1.html [L]
 
 # Redirect .html to clean URL
-RewriteCond %{THE_REQUEST} /restartlabs/([^.]+)\.html [NC]
-RewriteRule ^ /restartlabs/%1? [NC,L,R=301]
+RewriteCond %{THE_REQUEST} \s/+([^.]+)\.html [NC]
+RewriteRule ^ %1? [NC,L,R=301]
 
 # Default page
-DirectoryIndex index.html index.php
+DirectoryIndex frontend/index.html index.html index.php
 
 # Security headers
 <IfModule mod_headers.c>

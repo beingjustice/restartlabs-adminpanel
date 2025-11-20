@@ -14,8 +14,9 @@
         <!-- Sidebar -->
         <aside class="admin-sidebar">
             <div class="sidebar-header">
-                <h2><i class="fas fa-shield-alt"></i> RestartLabs</h2>
-                <p>Admin Panel</p>
+                <div class="logo-container">
+                    <img src="../frontend/img/restartlabs-logos.svg" alt="RestartLabs Logo">
+                </div>
             </div>
             
             <nav class="sidebar-nav">

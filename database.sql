@@ -3,8 +3,8 @@
 -- ============================================
 
 -- Create Database
-CREATE DATABASE IF NOT EXISTS restartlabs CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE restartlabs;
+CREATE DATABASE IF NOT EXISTS rest_restartlabs CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE rest_restartlabs;
 
 -- Admins Table
 CREATE TABLE IF NOT EXISTS admins (

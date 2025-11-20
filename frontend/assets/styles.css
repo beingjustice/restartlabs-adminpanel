@@ -196,8 +196,10 @@ p {
     width: 90vw;
     max-width: 1400px;
     min-width: 1000px;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
+    background: rgba(10, 14, 39, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(28, 212, 194, 0.2);
     border-radius: 1rem;
     padding: 2.5rem 3rem;
     margin-top: 1rem;
@@ -205,7 +207,7 @@ p {
     visibility: hidden;
     transition: all 0.3s ease;
     z-index: 1000;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(28, 212, 194, 0.1);
 }
 
 .mega-menu-parent:hover .mega-menu {
@@ -240,8 +242,8 @@ p {
 }
 
 .mega-product-card {
-    background: var(--primary-dark);
-    border: 1px solid var(--border-color);
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 0.75rem;
     padding: 1.25rem;
     transition: all 0.3s ease;
@@ -437,58 +439,98 @@ p {
 
 .btn-primary {
     font-family: var(--font-primary);
-    background: var(--accent-teal);
+    background: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-teal-light) 100%);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     color: #000000;
-    padding: 0.875rem 2rem;
-    border-radius: 0.5rem;
+    padding: 1rem 2.5rem;
+    border-radius: 0.75rem;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1rem;
-    letter-spacing: 0.02em;
-    transition: all 0.3s ease;
-    border: 1px solid var(--accent-teal);
+    letter-spacing: 0.03em;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    box-shadow: 0 4px 15px rgba(28, 212, 194, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    gap: 0.75rem;
+    box-shadow: 0 8px 24px rgba(28, 212, 194, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    background: var(--accent-teal-light);
-    border-color: var(--accent-teal-light);
-    box-shadow: 0 10px 30px rgba(28, 212, 194, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px) scale(1.02);
+    background: linear-gradient(135deg, var(--accent-teal-light) 0%, var(--accent-teal) 100%);
+    box-shadow: 0 12px 32px rgba(28, 212, 194, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
 }
 
 .btn-secondary {
     font-family: var(--font-primary);
-    background: rgba(28, 212, 194, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(28, 212, 194, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     color: var(--accent-teal);
-    padding: 0.875rem 2rem;
-    border: 1px solid var(--accent-teal);
-    border-radius: 0.5rem;
+    padding: 1rem 2.5rem;
+    border: 2px solid var(--accent-teal);
+    border-radius: 0.75rem;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1rem;
-    letter-spacing: 0.02em;
-    transition: all 0.3s ease;
+    letter-spacing: 0.03em;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    box-shadow: 0 4px 15px rgba(28, 212, 194, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    gap: 0.75rem;
+    box-shadow: 0 4px 16px rgba(28, 212, 194, 0.2), 0 0 0 0 rgba(28, 212, 194, 0.1) inset;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-secondary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: rgba(28, 212, 194, 0.15);
+    transition: width 0.4s ease;
+    z-index: 0;
+}
+
+.btn-secondary:hover::before {
+    width: 100%;
 }
 
 .btn-secondary:hover {
-    background: rgba(28, 212, 194, 0.25);
+    background: rgba(28, 212, 194, 0.2);
     border-color: var(--accent-teal-light);
     color: var(--accent-teal-light);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(28, 212, 194, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(28, 212, 194, 0.4), 0 0 0 1px rgba(28, 212, 194, 0.3) inset;
+}
+
+.btn-secondary span,
+.btn-secondary i {
+    position: relative;
+    z-index: 1;
 }
 
 .mobile-menu-btn {
@@ -623,32 +665,32 @@ p {
 }
 
 .section-dark {
-    background: var(--primary-dark);
+    background: #020819;
 }
 
 .section-light {
-    background: var(--secondary-dark);
+    background: #020819;
 }
 
 /* Professional Section Colors - Smooth Flow */
 #services.section,
 #services.section-dark {
-    background: #0a0e27;
+    background: #020819;
 }
 
 #products.section,
 #products.section-light {
-    background: #0a0e27;
+    background: #020819;
 }
 
 #team.section,
 #team.section-dark {
-    background: #000000;
+    background: #020819;
 }
 
 #contact.section,
 #contact.section-light {
-    background: #0a0e27;
+    background: #020819;
 }
 
 .container {
@@ -708,13 +750,18 @@ p {
 }
 
 .service-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
+    background: rgba(10, 14, 39, 0.6);
+    border: 1px solid rgba(28, 212, 194, 0.2);
     border-radius: 1rem;
     padding: 2rem;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+}
+
+/* Testimonials section cards - subtle white border */
+#testimonials .service-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .service-card::before {
@@ -736,18 +783,20 @@ p {
 .service-card:hover {
     transform: translateY(-5px);
     border-color: var(--accent-teal);
-    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(28, 212, 194, 0.2);
 }
 
 .service-icon {
     width: 60px;
     height: 60px;
-    background: var(--gradient-teal);
+    background: transparent;
+    border: 2px solid var(--accent-teal);
     border-radius: 0.75rem;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
+    color: var(--accent-teal);
     margin-bottom: 1.5rem;
 }
 
@@ -785,6 +834,18 @@ p {
     content: '✓';
     color: var(--accent-teal);
     font-weight: bold;
+    font-size: 1.1rem;
+    margin-right: 0.25rem;
+}
+
+/* Mobile App Development Card - Light Blue Icon */
+.service-card:nth-child(2) .service-icon {
+    border-color: #2dd4bf;
+    color: #2dd4bf;
+}
+
+.service-card:nth-child(2) .service-features li::before {
+    color: #2dd4bf;
 }
 
 /* About Section */
@@ -806,51 +867,32 @@ p {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
     margin-top: 3rem;
+    width: 100%;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .process-card {
-    background: linear-gradient(135deg, rgba(10, 14, 39, 0.6) 0%, rgba(0, 0, 0, 0.8) 100%);
-    border: 1px solid rgba(28, 212, 194, 0.2);
-    border-radius: 1.25rem;
+    background: rgba(10, 14, 39, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
     padding: 2.5rem;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
     position: relative;
-    overflow: hidden;
-}
-
-.process-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(28, 212, 194, 0.05) 0%, rgba(28, 212, 194, 0.02) 100%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    z-index: 0;
-}
-
-.process-card:hover::before {
-    opacity: 1;
 }
 
 .process-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--accent-teal);
-    box-shadow: 0 15px 35px rgba(28, 212, 194, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 .process-number {
     font-family: var(--font-heading);
     font-size: 3rem;
     font-weight: 800;
-    color: var(--accent-teal);
+    color: #ffffff;
     margin-bottom: 1.5rem;
     line-height: 1;
-    position: relative;
-    z-index: 1;
-    opacity: 0.8;
 }
 
 .process-card h3 {
@@ -858,19 +900,15 @@ p {
     font-size: clamp(1.375rem, 2vw, 1.625rem);
     font-weight: 700;
     margin-bottom: 1rem;
-    color: var(--text-primary);
+    color: #ffffff;
     letter-spacing: -0.01em;
-    position: relative;
-    z-index: 1;
 }
 
 .process-card p {
     font-family: var(--font-primary);
-    color: rgba(255, 255, 255, 0.8);
+    color: #ffffff;
     font-size: 1rem;
     line-height: 1.75;
-    position: relative;
-    z-index: 1;
 }
 
 /* Products Showcase Section */
@@ -1057,23 +1095,23 @@ p {
 .stat-card {
     text-align: center;
     padding: 1.5rem;
-    background: var(--card-bg);
+    background: rgba(10, 14, 39, 0.6);
     border-radius: 0.75rem;
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .stat-number {
     font-family: var(--font-heading);
     font-size: clamp(2.25rem, 4vw, 3rem);
     font-weight: 700;
-    color: var(--accent-teal);
+    color: #ffffff;
     margin-bottom: 0.5rem;
     letter-spacing: -0.02em;
 }
 
 .stat-label {
     font-family: var(--font-primary);
-    color: var(--text-secondary);
+    color: #ffffff;
     font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: 0.02em;
@@ -1329,50 +1367,68 @@ p {
 }
 
 .contact-form {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 1rem;
-    padding: 2rem;
+    background: rgba(10, 14, 39, 0.6);
+    border: 1px solid rgba(28, 212, 194, 0.2);
+    border-radius: 1.25rem;
+    padding: 2.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
 }
 
 .form-group label {
     font-family: var(--font-primary);
     display: block;
-    color: var(--text-secondary);
+    color: #ffffff;
     font-size: 0.95rem;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.01em;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.02em;
 }
 
 .form-group input,
 .form-group textarea {
     font-family: var(--font-primary);
     width: 100%;
-    padding: 0.875rem 1.25rem;
-    background: var(--primary-dark);
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-    color: var(--text-primary);
+    padding: 1rem 1.5rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    color: #ffffff;
     font-size: 1rem;
     line-height: 1.6;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    opacity: 1;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
     border-color: var(--accent-teal);
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 0 4px rgba(28, 212, 194, 0.15), 0 4px 12px rgba(28, 212, 194, 0.2);
+    transform: translateY(-1px);
+}
+
+.form-group input:hover,
+.form-group textarea:hover {
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .form-group textarea {
     resize: vertical;
-    min-height: 120px;
+    min-height: 140px;
+    font-family: var(--font-primary);
 }
 
 /* Footer */
@@ -1468,7 +1524,7 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-secondary);
+    color: #ffffff;
     transition: all 0.3s ease;
     text-align: center;
     line-height: 1;
@@ -1484,13 +1540,18 @@ p {
     line-height: 1;
     margin: 0;
     padding: 0;
+    color: #ffffff;
 }
 
 .social-link:hover {
     background: var(--accent-teal);
     border-color: var(--accent-teal);
-    color: var(--text-primary);
+    color: #ffffff;
     transform: translateY(-3px);
+}
+
+.social-link:hover i {
+    color: #ffffff;
 }
 
 .footer-bottom {

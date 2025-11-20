@@ -58,7 +58,14 @@ $stmt = $GLOBALS['pdo']->query("SELECT date, total_visits, real_visits, bot_visi
                                 FROM daily_stats 
                                 WHERE date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) 
                                 ORDER BY date ASC");
-$chartData = $stmt->fetchAll();
+$chartData7Days = $stmt->fetchAll();
+
+// Last 30 days stats for chart
+$stmt = $GLOBALS['pdo']->query("SELECT date, total_visits, real_visits, bot_visits 
+                                FROM daily_stats 
+                                WHERE date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY) 
+                                ORDER BY date ASC");
+$chartData30Days = $stmt->fetchAll();
 
 require_once 'includes/header.php';
 ?>
@@ -148,11 +155,15 @@ require_once 'includes/header.php';
 
 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 30px;">
     <div class="data-table-container">
-        <div style="padding: 20px; border-bottom: 1px solid var(--border-color);">
-            <h3 style="color: var(--accent-teal); margin-bottom: 10px;">Visits Overview (Last 7 Days)</h3>
+        <div style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="color: var(--accent-teal); margin: 0;">Visits Overview</h3>
+            <div style="display: flex; gap: 10px;">
+                <button id="chart7Days" class="chart-period-btn active" data-days="7">Last 7 Days</button>
+                <button id="chart30Days" class="chart-period-btn" data-days="30">Last 30 Days</button>
+            </div>
         </div>
         <div style="padding: 20px;">
-            <canvas id="visitsChart" style="max-height: 300px;"></canvas>
+            <canvas id="visitsChart" style="max-height: 400px;"></canvas>
         </div>
     </div>
     
@@ -239,42 +250,163 @@ require_once 'includes/header.php';
     </table>
 </div>
 
+<style>
+.chart-period-btn {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.chart-period-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(28, 212, 194, 0.3);
+    color: var(--text-primary);
+}
+
+.chart-period-btn.active {
+    background: linear-gradient(135deg, rgba(28, 212, 194, 0.2) 0%, rgba(28, 212, 194, 0.1) 100%);
+    border-color: var(--accent-teal);
+    color: var(--accent-teal);
+    box-shadow: 0 2px 8px rgba(28, 212, 194, 0.2);
+}
+</style>
+
 <script>
-// Visits Chart
-const ctx = document.getElementById('visitsChart').getContext('2d');
-const chartData = {
-    labels: [<?php echo implode(',', array_map(function($d) { return "'" . date('M d', strtotime($d['date'])) . "'"; }, $chartData)); ?>],
+// Chart data for 7 days
+const chartData7Days = {
+    labels: [<?php echo implode(',', array_map(function($d) { return "'" . date('M d', strtotime($d['date'])) . "'"; }, $chartData7Days)); ?>],
     datasets: [{
         label: 'Total Visits',
-        data: [<?php echo implode(',', array_column($chartData, 'total_visits')); ?>],
+        data: [<?php echo implode(',', array_column($chartData7Days, 'total_visits')); ?>],
         borderColor: '#1cd4c2',
-        backgroundColor: 'rgba(28, 212, 194, 0.1)',
-        tension: 0.4
+        backgroundColor: 'rgba(28, 212, 194, 0.3)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointBackgroundColor: '#1cd4c2',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2
     }, {
         label: 'Real Visitors',
-        data: [<?php echo implode(',', array_column($chartData, 'real_visits')); ?>],
+        data: [<?php echo implode(',', array_column($chartData7Days, 'real_visits')); ?>],
         borderColor: '#0d9488',
-        backgroundColor: 'rgba(13, 148, 136, 0.1)',
-        tension: 0.4
+        backgroundColor: 'rgba(13, 148, 136, 0.25)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointBackgroundColor: '#0d9488',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2
     }, {
         label: 'Bot Visits',
-        data: [<?php echo implode(',', array_column($chartData, 'bot_visits')); ?>],
-        borderColor: '#ff4444',
-        backgroundColor: 'rgba(255, 68, 68, 0.1)',
-        tension: 0.4
+        data: [<?php echo implode(',', array_column($chartData7Days, 'bot_visits')); ?>],
+        borderColor: '#ff6b6b',
+        backgroundColor: 'rgba(255, 107, 107, 0.25)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointBackgroundColor: '#ff6b6b',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2
     }]
 };
 
-new Chart(ctx, {
+// Chart data for 30 days
+const chartData30Days = {
+    labels: [<?php echo implode(',', array_map(function($d) { return "'" . date('M d', strtotime($d['date'])) . "'"; }, $chartData30Days)); ?>],
+    datasets: [{
+        label: 'Total Visits',
+        data: [<?php echo implode(',', array_column($chartData30Days, 'total_visits')); ?>],
+        borderColor: '#1cd4c2',
+        backgroundColor: 'rgba(28, 212, 194, 0.3)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        pointBackgroundColor: '#1cd4c2',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2
+    }, {
+        label: 'Real Visitors',
+        data: [<?php echo implode(',', array_column($chartData30Days, 'real_visits')); ?>],
+        borderColor: '#0d9488',
+        backgroundColor: 'rgba(13, 148, 136, 0.25)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        pointBackgroundColor: '#0d9488',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2
+    }, {
+        label: 'Bot Visits',
+        data: [<?php echo implode(',', array_column($chartData30Days, 'bot_visits')); ?>],
+        borderColor: '#ff6b6b',
+        backgroundColor: 'rgba(255, 107, 107, 0.25)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        pointBackgroundColor: '#ff6b6b',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2
+    }]
+};
+
+// Initialize chart
+const ctx = document.getElementById('visitsChart').getContext('2d');
+let visitsChart = new Chart(ctx, {
     type: 'line',
-    data: chartData,
+    data: chartData7Days,
     options: {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: {
+            intersect: false,
+            mode: 'index'
+        },
         plugins: {
             legend: {
+                display: true,
+                position: 'top',
                 labels: {
-                    color: '#cccccc'
+                    color: '#ffffff',
+                    font: {
+                        size: 12,
+                        weight: '500'
+                    },
+                    padding: 15,
+                    usePointStyle: true,
+                    pointStyle: 'circle'
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#ffffff',
+                bodyColor: '#ffffff',
+                borderColor: 'rgba(28, 212, 194, 0.5)',
+                borderWidth: 1,
+                padding: 12,
+                displayColors: true,
+                callbacks: {
+                    label: function(context) {
+                        return context.dataset.label + ': ' + context.parsed.y.toLocaleString();
+                    }
                 }
             }
         },
@@ -282,22 +414,50 @@ new Chart(ctx, {
             y: {
                 beginAtZero: true,
                 ticks: {
-                    color: '#cccccc'
+                    color: '#cccccc',
+                    font: {
+                        size: 11
+                    },
+                    callback: function(value) {
+                        return value.toLocaleString();
+                    }
                 },
                 grid: {
-                    color: 'rgba(255, 255, 255, 0.1)'
+                    color: 'rgba(255, 255, 255, 0.08)',
+                    drawBorder: false
                 }
             },
             x: {
                 ticks: {
-                    color: '#cccccc'
+                    color: '#cccccc',
+                    font: {
+                        size: 11
+                    },
+                    maxRotation: 45,
+                    minRotation: 0
                 },
                 grid: {
-                    color: 'rgba(255, 255, 255, 0.1)'
+                    color: 'rgba(255, 255, 255, 0.08)',
+                    drawBorder: false
                 }
             }
         }
     }
+});
+
+// Toggle between 7 and 30 days
+document.getElementById('chart7Days').addEventListener('click', function() {
+    visitsChart.data = chartData7Days;
+    visitsChart.update('active');
+    document.getElementById('chart7Days').classList.add('active');
+    document.getElementById('chart30Days').classList.remove('active');
+});
+
+document.getElementById('chart30Days').addEventListener('click', function() {
+    visitsChart.data = chartData30Days;
+    visitsChart.update('active');
+    document.getElementById('chart30Days').classList.add('active');
+    document.getElementById('chart7Days').classList.remove('active');
 });
 </script>
 

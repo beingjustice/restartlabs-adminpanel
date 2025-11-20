@@ -14,7 +14,7 @@ const footerHTML = `
         <div class="footer-content">
             <div class="footer-section">
                 <div class="logo" style="margin-bottom: 1rem;">
-                    <img src="img/restartlabs-logos.svg" alt="RestartLab Logo" style="height: 50px; width: auto;">
+                    <img src="frontend/img/restartlabs-logos.svg" alt="RestartLab Logo" style="height: 50px; width: auto;">
                 </div>
                 <p>Your trusted partner for software development, mobile app development, and web development services. We're here to help you achieve digital success.</p>
                 <div class="social-links" style="margin-top: 1.5rem;">

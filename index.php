@@ -1,10 +1,9 @@
 <?php
 /**
  * Root Index File
- * Redirects to frontend/index.html
+ * Serves the frontend landing page without changing the URL
  */
 
-header('Location: frontend/index.html');
-exit;
+readfile(__DIR__ . '/frontend/index.html');
 ?>
 

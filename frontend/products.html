@@ -6,14 +6,27 @@
     <title>Our Products - RestartLab</title>
     <meta name="description" content="Explore RestartLab's professional software solutions and products. Discover StocksFlow Inventory Management and other ready-to-use business solutions designed to streamline your operations.">
     
-    <!-- Base URL for localhost subdirectory (change to / when deploying to domain) -->
-    <base href="/restartlabs/frontend/">
+    <!-- Base URL handling for local (subdirectory) vs production (root) -->
+    <base id="dynamic-base" href="/">
+    <script>
+        (function() {
+            const baseTag = document.getElementById('dynamic-base');
+            if (!baseTag) return;
+            const host = window.location.hostname;
+            const path = window.location.pathname || '';
+            const runsOnLocalhost = host === 'localhost' || host === '127.0.0.1';
+            const inSubdirectory = path.startsWith('/restartlabs/');
+            if (runsOnLocalhost || inSubdirectory) {
+                baseTag.setAttribute('href', '/restartlabs/');
+            }
+        })();
+    </script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="stylesheet" href="frontend/assets/styles.css">
 </head>
 <body>
     <!-- Global Header Container -->
@@ -53,10 +66,10 @@
     <div id="global-footer"></div>
 
     <!-- JavaScript -->
-    <script src="js/header.js"></script>
-    <script src="js/footer.js"></script>
-    <script src="js/script.js"></script>
-    <script src="js/tracking.js"></script>
+    <script src="frontend/js/header.js"></script>
+    <script src="frontend/js/footer.js"></script>
+    <script src="frontend/js/script.js"></script>
+    <script src="frontend/js/tracking.js"></script>
 </body>
 </html>
 

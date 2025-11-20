@@ -201,7 +201,7 @@ if (contactForm) {
         // Submit to API - create FormData here
         const formData = new FormData(this);
         
-        fetch('../api/submit-contact.php', {
+        fetch('frontend/api/submit-contact.php', {
             method: 'POST',
             body: formData
         })

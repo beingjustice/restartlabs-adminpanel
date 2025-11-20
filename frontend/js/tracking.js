@@ -10,7 +10,7 @@
     const page = window.location.pathname;
     
     // Track visit via API
-    fetch('../api/track-visit.php?page=' + encodeURIComponent(page), {
+    fetch('frontend/api/track-visit.php?page=' + encodeURIComponent(page), {
         method: 'GET',
         credentials: 'same-origin'
     }).catch(function(error) {
@@ -36,7 +36,7 @@
         const timeSpent = Math.floor((Date.now() - startTime) / 1000);
         if (timeSpent > 0) {
             // Send time spent (optional, can be implemented in backend)
-            navigator.sendBeacon('../api/track-visit.php?page=' + encodeURIComponent(page) + '&duration=' + timeSpent);
+            navigator.sendBeacon('frontend/api/track-visit.php?page=' + encodeURIComponent(page) + '&duration=' + timeSpent);
         }
     });
 })();

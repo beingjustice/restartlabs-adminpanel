@@ -32,7 +32,7 @@ function loadGlobalHeader() {
     <nav class="navbar" id="navbar">
         <div class="navbar-container">
             <a href="./" class="logo">
-                <img src="img/restartlabs-logos.svg" alt="RestartLab Logo" style="height: 40px; width: auto;">
+                <img src="frontend/img/restartlabs-logos.svg" alt="RestartLab Logo" style="height: 40px; width: auto;">
             </a>
             
             <ul class="nav-links" id="navLinks">

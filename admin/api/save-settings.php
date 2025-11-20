@@ -18,26 +18,23 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 // Get POST data
-$whatsappNumber = sanitizeInput($_POST['whatsapp_number'] ?? '');
-$whatsappEnabled = isset($_POST['whatsapp_enabled']) ? 1 : 0;
 $contactEmail = sanitizeInput($_POST['contact_email'] ?? '');
 
 // Validation
-$errors = [];
-
-if (!empty($whatsappNumber) && !preg_match('/^\+?[1-9]\d{1,14}$/', $whatsappNumber)) {
-    $errors[] = 'Invalid WhatsApp number format. Use international format (e.g., +8801XXXXXXXXX)';
-}
-
-if (!empty($contactEmail) && !filter_var($contactEmail, FILTER_VALIDATE_EMAIL)) {
-    $errors[] = 'Invalid email address';
-}
-
-if (!empty($errors)) {
+if (empty($contactEmail)) {
     http_response_code(400);
     echo json_encode([
         'success' => false,
-        'message' => implode(', ', $errors)
+        'message' => 'Email address is required'
+    ]);
+    exit;
+}
+
+if (!filter_var($contactEmail, FILTER_VALIDATE_EMAIL)) {
+    http_response_code(400);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Invalid email address'
     ]);
     exit;
 }
@@ -60,18 +57,6 @@ try {
             INDEX idx_key (setting_key)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
     }
-    
-    // Save WhatsApp number
-    $stmt = $pdo->prepare("INSERT INTO settings (setting_key, setting_value, updated_by) 
-                           VALUES ('whatsapp_number', ?, ?)
-                           ON DUPLICATE KEY UPDATE setting_value = ?, updated_by = ?, updated_at = NOW()");
-    $stmt->execute([$whatsappNumber, $_SESSION['admin_id'], $whatsappNumber, $_SESSION['admin_id']]);
-    
-    // Save WhatsApp enabled
-    $stmt = $pdo->prepare("INSERT INTO settings (setting_key, setting_value, updated_by) 
-                           VALUES ('whatsapp_enabled', ?, ?)
-                           ON DUPLICATE KEY UPDATE setting_value = ?, updated_by = ?, updated_at = NOW()");
-    $stmt->execute([$whatsappEnabled, $_SESSION['admin_id'], $whatsappEnabled, $_SESSION['admin_id']]);
     
     // Save contact email
     $stmt = $pdo->prepare("INSERT INTO settings (setting_key, setting_value, updated_by) 

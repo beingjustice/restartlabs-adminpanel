@@ -44,8 +44,29 @@ body {
 }
 
 .sidebar-header {
-    padding: 30px 20px;
+    padding: 20px 15px;
     border-bottom: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.sidebar-header .logo-container {
+    margin-bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar-header .logo-container img {
+    height: 40px;
+    width: auto;
+    max-width: 150px;
+    opacity: 0.95;
+    transition: all 0.3s ease;
+}
+
+.sidebar-header .logo-container img:hover {
+    opacity: 1;
+    transform: scale(1.05);
 }
 
 .sidebar-header h2 {

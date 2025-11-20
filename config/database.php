@@ -6,9 +6,9 @@
 
 // Database credentials
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'restartlabs');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_NAME', 'rest_restartlabs');
+define('DB_USER', 'rest_restartlabs');
+define('DB_PASS', '3zMACJlRvI@FIPbf');
 define('DB_CHARSET', 'utf8mb4');
 
 // Create PDO connection
